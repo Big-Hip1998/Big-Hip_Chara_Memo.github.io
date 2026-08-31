@@ -1,5 +1,5 @@
 // ★★★ 末尾を /exec の本番用URLに変更しました ★★★
-const GAS_URL = "https://script.google.com/macros/s/AKfycbzloiXRseiuPp6o3_Z_mqYxjZPk5Z5VzlSX_oS7gMaSArXw15msq_Pi6bY5ErBQdR927Q/exec";
+const GAS_URL = "https://script.google.com/macros/s/AKfycbwzved1H4LlbEkCJvjP5lUZIdJ1bFvRU74z3GdwPAYcS7ozvi4Wp-ysPkcj8-zQapRIeA/exec";
 
 let allCharacters = [];
 let allRelations = [];
