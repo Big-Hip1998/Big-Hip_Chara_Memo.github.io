@@ -1,5 +1,5 @@
 // ★★★ 末尾を /exec の本番用URLに変更しました ★★★
-const GAS_URL = "https://script.google.com/macros/s/AKfycbxOhQRN7bW3dxtIe72S8RGrdSdrzuXsu1KHkBUyUbUueUjvl9EdRNN7Q6Igy6oXestPmg/exec";
+const GAS_URL = "https://script.google.com/macros/s/AKfycbxD__uzcrFn61sQfXd-xQgFRXE32bQOnMFWw5Gv8N3tdP-FucBw8fBmbLMT9So1rknj7g/exec";
 
 let allCharacters = [];
 let allRelations = [];
@@ -181,6 +181,29 @@ function switchTabDirect(tabName) {
   if (tabName === 'list' && navBtns[0]) navBtns[0].classList.add('active');
   if (tabName === 'add' && navBtns[1]) navBtns[1].classList.add('active');
   if (tabName === 'relation' && navBtns[2]) navBtns[2].classList.add('active');
+}
+
+async function deleteCharacter(id, name) {
+  if (!confirm(`「${name}」を削除してもよろしいですか？`)) {
+    return;
+  }
+
+  try {
+    const response = await fetch(GAS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({
+        action: 'deleteCharacter',
+        data: { id: id }
+      })
+    });
+
+    alert("削除が完了しました。");
+    await fetchData(); // 最新データを再取得して表示更新
+
+  } catch (err) {
+    alert("削除処理に失敗しました: " + err);
+  }
 }
 
 // XSS対策のエスケープ関数
