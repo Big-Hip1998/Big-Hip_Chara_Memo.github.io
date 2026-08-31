@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>うちのこメモ</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- 相関図ライブラリ Vis.js の読み込み -->
+  <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+</head>
+<body>
+
+  <header>
+    <h1>うちのこメモ</h1>
+    <nav>
+      <button class="nav-btn active" onclick="switchTab('list')">キャラ一覧</button>
+      <button class="nav-btn" onclick="switchTab('add')">キャラ登録</button>
+      <button class="nav-btn" onclick="switchTab('relation')">相関図</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- 1. キャラ一覧画面 -->
+    <section id="tab-list" class="tab-content active">
+      <div class="controls">
+        <input type="text" id="searchInput" placeholder="名前・設定をキーワード検索..." oninput="filterAndSortCharacters()">
+        
+        <!-- 血液型絞り込みフィルター -->
+        <select id="filterBloodType" onchange="filterAndSortCharacters()">
+          <option value="">全ての血液型</option>
+          <option value="A型">A型</option>
+          <option value="B型">B型</option>
+          <option value="O型">O型</option>
+          <option value="AB型">AB型</option>
+          <option value="不明">不明</option>
+        </select>
+
+        <!-- ソート機能 -->
+        <select id="sortSelect" onchange="filterAndSortCharacters()">
+          <option value="created-desc">登録順（新しい順）</option>
+          <option value="name-asc">名前（五十音順）</option>
+          <option value="height-asc">身長（低い順）</option>
+          <option value="height-desc">身長（高い順）</option>
+        </select>
+        
+        <button onclick="fetchData()">最新データに更新</button>
+      </div>
+
+      <div id="characterList" class="card-grid">
+        <!-- JSでここにカードが生成されます -->
+      </div>
+    </section>
+
+    <!-- 2. キャラ登録画面 -->
+    <section id="tab-add" class="tab-content">
+      <h2>新規キャラクター登録</h2>
+      <form id="addCharForm">
+        <div class="form-group">
+          <label>名前 *</label>
+          <input type="text" id="addName" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>誕生日</label>
+            <input type="text" id="addBirthday" placeholder="例: 10月5日">
+          </div>
+          <div class="form-group">
+            <label>身長 (cm)</label>
+            <input type="number" id="addHeight" placeholder="例: 165">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>血液型</label>
+            <select id="addBloodType">
+              <option value="">未設定</option>
+              <option value="A型">A型</option>
+              <option value="B型">B型</option>
+              <option value="O型">O型</option>
+              <option value="AB型">AB型</option>
+              <option value="不明">不明</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>星座</label>
+            <input type="text" id="addZodiac" placeholder="例: てんびん座">
+          </div>
+          <div class="form-group">
+            <label>干支</label>
+            <input type="text" id="addZodiacAnimal" placeholder="例: 卯">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>詳細設定（生い立ち・性格など）</label>
+          <textarea id="addDetails" rows="6"></textarea>
+        </div>
+        <div class="form-group">
+          <label>キャラクター画像</label>
+          <input type="file" id="addImage" accept="image/*">
+        </div>
+        <button type="submit" id="saveBtn">保存する</button>
+      </form>
+    </section>
+
+    <!-- 3. 相関図画面 -->
+    <section id="tab-relation" class="tab-content">
+      <h2>相関図</h2>
+      <div class="relation-controls">
+        <select id="relFrom"></select>
+        <span>から</span>
+        <select id="relTo"></select>
+        <span>への関係:</span>
+        <input type="text" id="relLabel" placeholder="例: ライバル, 幼馴染">
+        <button onclick="addRelation()">関係を追加</button>
+      </div>
+      <div id="networkCanvas"></div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+  <script src="relation.js"></script>
+</body>
+</html>
