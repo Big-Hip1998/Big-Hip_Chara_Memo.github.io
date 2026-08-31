@@ -142,16 +142,24 @@ async function handleAddCharacter(e) {
   };
 
   try {
-    await fetch(GAS_URL, {
+    // GASへPOST送信
+    const response = await fetch(GAS_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify(newChar)
     });
-    
+
+    // フォームリセット
     document.getElementById('addCharForm').reset();
-    await fetchData();
+    
     alert("登録が完了しました！");
-    switchTab('list');
+
+    // タブを「キャラ一覧」へ切り替え
+    switchTabDirect('list');
+
+    // データを再取得して表示を更新
+    await fetchData();
+
   } catch (err) {
     alert("保存失敗: " + err);
   } finally {
@@ -160,27 +168,19 @@ async function handleAddCharacter(e) {
   }
 }
 
-// キャラ削除処理
-async function deleteCharacter(id, name) {
-  if (!confirm(`「${name}」を削除してもよろしいですか？\n（関連する相関図のデータも削除されます）`)) {
-    return;
-  }
+// イベントに依存しないタブ切り替え用関数
+function switchTabDirect(tabName) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+  
+  const targetTab = document.getElementById(`tab-${tabName}`);
+  if (targetTab) targetTab.classList.add('active');
 
-  try {
-    await fetch(GAS_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({
-        action: 'deleteCharacter',
-        data: { id: id }
-      })
-    });
-
-    alert(`「${name}」を削除しました。`);
-    await fetchData(); // 最新データの再取得
-  } catch (err) {
-    alert("削除に失敗しました: " + err);
-  }
+  // 対応するナビボタンをアクティブにする
+  const navBtns = document.querySelectorAll('.nav-btn');
+  if (tabName === 'list' && navBtns[0]) navBtns[0].classList.add('active');
+  if (tabName === 'add' && navBtns[1]) navBtns[1].classList.add('active');
+  if (tabName === 'relation' && navBtns[2]) navBtns[2].classList.add('active');
 }
 
 // XSS対策のエスケープ関数
